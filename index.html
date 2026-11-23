@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TerraNova — Iogurte artesanal do Triângulo Mineiro</title>
+  <meta name="description" content="Iogurte artesanal com poucos ingredientes, em cinco versões: Base, Proteica, Light, Kids e Senior. Uberaba, Uberlândia e Araxá." />
+  <meta name="theme-color" content="#16291e" />
+  <link rel="preload" href="assets/fonts/fraunces-latin-full-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./js/vendor/three.module.js",
+        "three/addons/": "./js/vendor/addons/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- Carregamento: a garrafa enche, a tampa fecha e vira a garrafa 3D -->
+  <div class="loader" aria-hidden="true">
+    <p class="loader__brand">TerraNova</p>
+    <p class="loader__note">Iogurte artesanal<br />do Triângulo Mineiro</p>
+    <div class="loader__bottle">
+      <div class="loader__glass"><div class="loader__liquid"><span class="loader__wave"></span></div></div>
+      <svg class="loader__outline" preserveAspectRatio="none"><path class="loader__body" /><path class="loader__cap" /></svg>
+    </div>
+    <p class="loader__caption">Envasando a primeira garrafa</p>
+    <p class="loader__pct"><span>0</span>%</p>
+  </div>
+
+  <!-- Camadas fixas: garrafa 3D e granulação -->
+  <canvas id="cena3d" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="nav__brand" href="#topo" aria-label="TerraNova, voltar ao início">
+      <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo" /></svg>
+      <span>TerraNova</span>
+    </a>
+    <nav class="nav__links" aria-label="Seções">
+      <a href="#linha">A linha</a>
+      <a href="#processo">Processo</a>
+      <a href="#onde">Onde comprar</a>
+      <a href="#campanha">Campanha</a>
+      <a href="#resultados">Resultados</a>
+    </nav>
+    <a class="pill pill--fill nav__cta" href="#aviso">Avise-me do lançamento</a>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- 1 · HERO: a marca dividida pela garrafa -->
+    <section class="hero" id="topo" data-bottle="0,-0.06,1.0,0,1" data-bottle-m="0,-0.32,0.54,0,1">
+      <p class="hero__kicker">Iogurte artesanal do<br />Triângulo Mineiro</p>
+      <p class="hero__meta">Garrafa de vidro<br />280 ml</p>
+      <h1 class="hero__word" aria-label="TerraNova">
+        <span class="hero__half hero__half--l"><span>Terra</span></span>
+        <span class="hero__half hero__half--r"><span>Nova</span></span>
+      </h1>
+      <div class="hero__foot">
+        <p class="hero__tag">O bem da terra<br />no seu dia.</p>
+        <a class="scroll-cue" href="#manifesto"><span class="scroll-cue__line"></span>Role para conhecer</a>
+        <div class="hero__buy">
+          <p class="price"><span>A partir de</span><strong>R$ 12,99</strong></p>
+          <a class="pill" href="#linha">Ver as cinco versões</a>
+        </div>
+      </div>
+      <img class="hero__fallback" src="assets/img/original.jpg" alt="Garrafa de vidro do iogurte TerraNova Base" />
+    </section>
+
+    <!-- 2 · MANIFESTO: palavras acendem com a rolagem -->
+    <section class="manifesto" id="manifesto" data-bottle="-0.5,-0.04,0.86,1,1" data-bottle-m="0.55,0.5,0.42,1,0">
+      <div class="manifesto__sticky">
+        <p class="manifesto__text" data-reveal-words>
+          Poucos ingredientes. Nada escondido no rótulo. Um iogurte feito em pequenos lotes, sem pressa, para quem quer saber exatamente o que está levando para casa.
+        </p>
+        <p class="manifesto__sign">NewBrand para TerraNova, 2026</p>
+      </div>
+    </section>
+
+    <!-- 3 · INGREDIENTES: anotações em volta da garrafa -->
+    <section class="ingredientes" id="ingredientes" data-bottle="0,-0.16,0.76,2,1" data-bottle-m="0.5,1.9,0.4,2,0">
+      <h2 class="display-md ingredientes__title">Você consegue ler o rótulo inteiro.</h2>
+      <ul class="notes">
+        <li class="note note--l1"><h3>Leite fresco</h3><p>De produtores da região, recebido no mesmo dia.</p></li>
+        <li class="note note--l2"><h3>Garrafa de vidro</h3><p>Não passa gosto e mostra a textura antes de abrir.</p></li>
+        <li class="note note--r1"><h3>Fermento lácteo vivo</h3><p>As culturas que fazem iogurte do jeito tradicional, com probióticos naturais.</p></li>
+        <li class="note note--r2"><h3>Pouco aditivo</h3><p>Mínimo de conservantes e estabilizantes. O resto é tempo de fermentação.</p></li>
+      </ul>
+    </section>
+
+    <!-- 4 · LINHA: rolagem fixa, a garrafa troca de versão -->
+    <section class="linha" id="linha" data-bottle="0,-0.02,0.84,3,1" data-bottle-m="0.45,0.4,0.42,3,0" aria-label="As cinco versões TerraNova">
+      <div class="linha__sticky">
+        <div class="linha__stage"><!-- painéis gerados por js/variants.js --></div>
+        <div class="linha__index">
+          <ol class="linha__tabs" role="tablist"></ol>
+          <div class="linha__progress"><span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · POR QUE VIDRO -->
+    <section class="vidro" data-bottle="-0.5,-0.02,0.92,4,1" data-bottle-m="0.6,1.9,0.4,4,0">
+      <div class="vidro__col">
+        <h2 class="display-md">Por que vidro.</h2>
+        <div class="rows">
+          <article class="row"><h3>Não passa gosto</h3><p>O vidro é inerte: não reage com o iogurte e não precisa de verniz ou plástico por dentro. O sabor que sai da fábrica é o que chega ao seu copo.</p></article>
+          <article class="row"><h3>Protege o frescor</h3><p>É uma barreira contra oxigênio e gases de fora, o que ajuda a manter o sabor e as culturas vivas até a última gota.</p></article>
+          <article class="row"><h3>Você vê o que leva</h3><p>Textura, cor e consistência à mostra antes de abrir. Sem surpresa dentro da embalagem.</p></article>
+          <article class="row"><h3>Ganha outra vida</h3><p>Depois de vazia, a garrafa vira porta-granola, vaso ou pote de overnight oats.</p></article>
+        </div>
+        <dl class="vidro__dados">
+          <div><dt>Reciclável</dt><dd>100%</dd><p>e infinitas vezes, sem perder qualidade.</p></div>
+          <div><dt>Reciclagem no Brasil</dt><dd>30%</dd><p>das embalagens de vidro em 2023, segundo a Abividro. Dá para melhorar.</p></div>
+          <div><dt>Lixeira certa</dt><dd class="verde">Verde</dd><p>é a cor do vidro na coleta seletiva (CONAMA 275/2001).</p></div>
+        </dl>
+        <p class="vidro__descarte"><strong>Como descartar:</strong> enxágue a garrafa, separe a tampa metálica e coloque o vidro na lixeira verde ou num ponto de entrega voluntária.</p>
+        <p class="vidro__fontes">Fontes: Abividro via Portal da Indústria (2023) e Resolução CONAMA nº 275/2001.</p>
+      </div>
+    </section>
+
+    <!-- 6 · PROCESSO (sequência real → numerada) -->
+    <section class="processo" id="processo" data-bottle="0.2,1.9,0.5,5,0" data-bottle-m="0.5,1.9,0.3,5,0">
+      <header class="processo__head">
+        <h2 class="display-md">Do pasto à garrafa.</h2>
+        <p>Três etapas, todas na nossa área própria de produção.</p>
+      </header>
+      <ol class="steps">
+        <li class="step">
+          <div class="photo-slot" data-src="assets/img/processo-1.jpg" data-label="Foto do leite chegando da fazenda (assets/img/processo-1.jpg)"></div>
+          <span class="step__n">1</span>
+          <h3>Leite do dia</h3>
+          <p>Recebido de produtores do Triângulo Mineiro e pasteurizado logo na chegada.</p>
+        </li>
+        <li class="step">
+          <div class="photo-slot" data-src="assets/img/processo-2.jpg" data-label="Foto da fermentação em pequenos lotes (assets/img/processo-2.jpg)"></div>
+          <span class="step__n">2</span>
+          <h3>Fermentação lenta</h3>
+          <p>Lotes pequenos e sem pressa. É o tempo, e não o espessante, que dá a textura.</p>
+        </li>
+        <li class="step">
+          <div class="photo-slot" data-src="assets/img/processo-3.jpg" data-label="Foto do envase nas garrafas (assets/img/processo-3.jpg)"></div>
+          <span class="step__n">3</span>
+          <h3>Envase em vidro</h3>
+          <p>Fechado na hora e levado refrigerado aos mercados parceiros da região.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 7 · ONDE COMPRAR -->
+    <section class="onde" id="onde" data-bottle="-0.2,1.9,0.5,6,0" data-bottle-m="0.5,1.9,0.3,6,0">
+      <div class="onde__text">
+        <h2 class="display-md">Nas gôndolas de Uberaba, Uberlândia e Araxá.</h2>
+        <p>Venda seletiva em supermercados de referência e empórios das cidades-polo, ao lado de outros produtos que também falam de bem-estar. Os parceiros de lançamento são o Supermercado LS Guarato, em Uberaba, e o Empório Bahamas, em Uberlândia.</p>
+        <p class="canal"><span>Canal curto</span>Fabricante <i aria-hidden="true">→</i> Varejista <i aria-hidden="true">→</i> Consumidor</p>
+        <p class="price price--lg"><span>Todas as versões</span><strong>R$ 12,99</strong></p>
+      </div>
+
+      <div class="onde__mapa">
+        <figure class="mapa">
+          <svg viewBox="0 0 600 420" role="img" aria-labelledby="mapa-t">
+            <title id="mapa-t">Mapa do Triângulo Mineiro com as rotas de Uberaba para Uberlândia e Araxá</title>
+            <path class="mapa__shape" d="M40 150 C 90 110, 170 90, 250 96 C 330 100, 390 120, 450 150 C 500 175, 560 200, 570 250 C 580 300, 540 340, 480 350 C 410 362, 360 330, 300 340 C 230 352, 170 380, 110 350 C 60 325, 30 280, 28 230 C 26 200, 30 170, 40 150 Z" />
+            <path id="rota-udi" class="mapa__route" d="M300 300 C 300 280, 300 230, 262 170" />
+            <path id="rota-axa" class="mapa__route" d="M300 300 C 380 290, 440 260, 482 268" />
+            <circle class="mapa__carga" r="3.2"><animateMotion dur="5.5s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"><mpath href="#rota-udi" /></animateMotion></circle>
+            <circle class="mapa__carga" r="3.2"><animateMotion dur="6.5s" begin="1.4s" repeatCount="indefinite"><mpath href="#rota-axa" /></animateMotion></circle>
+            <text class="mapa__km" x="310" y="236">≈ 100 km</text>
+            <text class="mapa__km" x="392" y="300">≈ 120 km</text>
+            <g class="mapa__city" data-cidade="1" transform="translate(262 170)" tabindex="0" role="button" aria-label="Uberlândia"><circle class="hit" r="26" /><circle r="7" /><circle class="pulse" r="7" /><text x="16" y="-10">Uberlândia</text></g>
+            <g class="mapa__city" data-cidade="0" transform="translate(300 300)" tabindex="0" role="button" aria-label="Uberaba"><circle class="hit" r="26" /><circle r="7" /><circle class="pulse" r="7" /><text x="16" y="26">Uberaba</text></g>
+            <g class="mapa__city" data-cidade="2" transform="translate(482 268)" tabindex="0" role="button" aria-label="Araxá"><circle class="hit" r="26" /><circle r="7" /><circle class="pulse" r="7" /><text x="-34" y="-18">Araxá</text></g>
+          </svg>
+        </figure>
+        <div class="cidade-card" aria-live="polite">
+          <div class="cidade-card__tabs" role="tablist"></div>
+          <div class="cidade-card__body"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 7b · ESTRATÉGIA: matriz FOFA e 4 Ps (passe o mouse para ver a resposta do plano) -->
+    <section class="estrategia" id="estrategia" data-bottle="-0.2,1.9,0.45,6,0" data-bottle-m="0.5,1.9,0.3,6,0" aria-labelledby="estrategia-titulo">
+      <header class="estrategia__head">
+        <h2 class="display-md" id="estrategia-titulo">Por que a TerraNova tem espaço.</h2>
+        <p>A análise da NewBrand encontrou um mercado de bem-estar em alta e um público das classes B- e C+ que quer saber o que está comendo. Cada ponto da matriz tem uma resposta no plano: passe o mouse ou toque para ver.</p>
+      </header>
+
+      <div class="fofa" role="list">
+        <p class="fofa__eixo fofa__eixo--pos" aria-hidden="true">Fatores positivos</p>
+        <p class="fofa__eixo fofa__eixo--neg" aria-hidden="true">Fatores negativos</p>
+        <p class="fofa__eixo fofa__eixo--int" aria-hidden="true">Internos</p>
+        <p class="fofa__eixo fofa__eixo--ext" aria-hidden="true">Externos</p>
+        <article class="quad quad--f" role="listitem" tabindex="0">
+          <h3>Forças</h3>
+          <ul><li>Segmentação bem definida</li><li>Apelo do artesanal</li></ul>
+          <p class="quad__resp"><span>Como o plano usa</span>Cinco versões para públicos diferentes, do café da manhã à melhor idade, com poucos ingredientes no rótulo.</p>
+        </article>
+        <article class="quad quad--fr" role="listitem" tabindex="0">
+          <h3>Fraquezas</h3>
+          <ul><li>Prazo de validade reduzido</li><li>Custo alto da embalagem de vidro</li></ul>
+          <p class="quad__resp"><span>Como o plano responde</span>Canal curto e refrigerado, reposição frequente nas gôndolas e preço premium que sustenta o vidro.</p>
+        </article>
+        <article class="quad quad--o" role="listitem" tabindex="0">
+          <h3>Oportunidades</h3>
+          <ul><li>Crescimento do mercado wellness</li><li>Busca por bem-estar e vida saudável</li></ul>
+          <p class="quad__resp"><span>Como o plano usa</span>Comunicação do natural com influenciadores locais de saúde e perfis no Instagram e no TikTok.</p>
+        </article>
+        <article class="quad quad--a" role="listitem" tabindex="0">
+          <h3>Ameaças</h3>
+          <ul><li>Mercado de laticínios já consolidado</li><li>Exige diferenciação precisa</li></ul>
+          <p class="quad__resp"><span>Como o plano responde</span>Clean label, produção artesanal e distribuição seletiva, só em lojas que já vendem bem-estar.</p>
+        </article>
+      </div>
+
+      <div class="mix">
+        <h3 class="mix__titulo">O mix de marketing</h3>
+        <ol class="mix__lista">
+          <li class="mix__p"><p class="mix__nome">Produto</p><p class="mix__chave">5 versões</p><p>Diferenciação e extensão de linha: portfólio enxuto, clean label e segmentado.</p></li>
+          <li class="mix__p"><p class="mix__nome">Preço</p><p class="mix__chave">R$ 12,99</p><p>Premium, um pouco acima dos convencionais, competitivo entre as marcas de bem-estar.</p></li>
+          <li class="mix__p"><p class="mix__nome">Praça</p><p class="mix__chave">Seletiva</p><p>Supermercados parceiros nas cidades-polo, com a cadeia de frio garantida.</p></li>
+          <li class="mix__p"><p class="mix__nome">Promoção</p><p class="mix__chave">Push + Pull</p><p>Outdoors, influenciadores e redes geram demanda; degustação e gôndola levam à compra.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 8 · CAMPANHA: rolagem horizontal pelas peças (Push + Pull) -->
+    <section class="campanha" id="campanha" data-bottle="0.2,1.9,0.45,6,0" data-bottle-m="0.5,1.9,0.3,6,0" aria-label="A campanha de lançamento">
+      <div class="campanha__sticky">
+        <header class="campanha__head">
+          <h2 class="display-md">A campanha nas ruas e nas gôndolas.</h2>
+          <p>Estratégia híbrida: Pull para gerar demanda e Push para levar à primeira compra. Todas as peças seguem o mesmo design simples, que reforça o natural.</p>
+        </header>
+        <div class="campanha__viewport">
+          <ol class="campanha__track">
+            <li class="camp camp--wide">
+              <figure class="camp__img"><img src="assets/img/campanha-outdoor.jpg" alt="Outdoor da TerraNova com a frase O bem da terra no seu dia, numa avenida ao pôr do sol" loading="lazy" /></figure>
+              <div class="camp__txt"><span class="camp__tag">Pull: gera demanda</span><h3>Outdoors nas cidades-polo</h3><p>Mídia exterior em Uberaba e Uberlândia, levando o consumidor até o supermercado.</p></div>
+            </li>
+            <li class="camp">
+              <figure class="camp__img photo-slot" data-src="assets/img/campanha-influenciadores.jpg" data-label="Foto: influenciadora gravando receita com a TerraNova (assets/img/campanha-influenciadores.jpg)"></figure>
+              <div class="camp__txt"><span class="camp__tag">Pull: gera demanda</span><h3>Influenciadores locais</h3><p>Parcerias com criadores de conteúdo de fitness, saúde e bem-estar do Triângulo Mineiro.</p></div>
+            </li>
+            <li class="camp camp--tall">
+              <figure class="camp__img"><img src="assets/img/campanha-instagram.jpg" alt="Celular mostrando o perfil da TerraNova no Instagram" loading="lazy" /></figure>
+              <div class="camp__txt"><span class="camp__tag">Pull: gera demanda</span><h3>Instagram e TikTok</h3><p>Perfis da marca com conteúdo de nutrição e rotina saudável, para várias gerações.</p></div>
+            </li>
+            <li class="camp">
+              <figure class="camp__img"><img src="assets/img/campanha-degustacao.jpg" alt="Promotora oferecendo degustação de TerraNova numa ilha refrigerada do supermercado" loading="lazy" /></figure>
+              <div class="camp__txt"><span class="camp__tag camp__tag--push">Push: com as redes</span><h3>Degustação no PDV</h3><p>Ilhas refrigeradas nos fins de semana, em horário de pico, com as versões Base e Proteica.</p></div>
+            </li>
+            <li class="camp camp--wide">
+              <figure class="camp__img"><img src="assets/img/campanha-gondola.jpg" alt="Geladeira do supermercado com a linha completa TerraNova a R$ 12,99" loading="lazy" /></figure>
+              <div class="camp__txt"><span class="camp__tag camp__tag--push">Push: com as redes</span><h3>A linha completa na gôndola</h3><p>Negociação com as redes, posição de gôndola e reposição frequente por causa da validade curta.</p></div>
+            </li>
+          </ol>
+        </div>
+        <div class="campanha__progress" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+
+    <!-- 9 · GÔNDOLA: as cinco garrafas 3D lado a lado + metas do plano -->
+    <section class="gondola" id="gondola" data-bottle="0,1.9,0.4,6,0,1" data-bottle-m="0,1.9,0.4,6,0,1" aria-label="A linha completa na gôndola">
+      <div class="gondola__sticky">
+        <header class="gondola__head">
+          <h2 class="display-md">Cinco versões,<br />uma prateleira.</h2>
+          <p>Do café da manhã ao pós-treino, da lancheira à melhor idade. A linha inteira lado a lado no mercado, cada uma com a sua cor de tampa.</p>
+        </header>
+        <div class="gondola__shelf" aria-hidden="true"></div>
+        <ul class="gondola__names"></ul>
+        <div class="metas">
+          <p class="metas__label">Metas do plano para os seis primeiros meses</p>
+          <dl class="metas__grid">
+            <div><dt>Pontos de venda</dt><dd data-count="10">0</dd></div>
+            <div><dt>Unidades vendidas</dt><dd data-count="120000">0</dd></div>
+            <div><dt>Reconhecimento de marca</dt><dd data-count="30" data-suffix="%">0</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · RESULTADOS: planejado × realizado (cenário simulado de 2027) -->
+    <section class="resultados" id="resultados" data-bottle="0.5,1.9,0.4,6,0,0" data-bottle-m="0.5,1.9,0.3,6,0,0" aria-labelledby="resultados-titulo">
+      <header class="resultados__head">
+        <div>
+          <p class="badge-sim">Cenário simulado de 2027</p>
+          <h2 class="display-md" id="resultados-titulo">Planejado × realizado.</h2>
+        </div>
+        <p>O monitoramento compara o que foi projetado com o que aconteceu. Mês abaixo da meta vira <strong>Stand by</strong>, com uma ação corretiva no mesmo mês; dois meses seguidos abaixo, a estratégia é revista.</p>
+      </header>
+      <div class="painel" data-painel>
+        <div class="painel__tabs" role="tablist" aria-label="Indicador"></div>
+        <div class="painel__kpis"></div>
+        <div class="painel__corpo">
+          <figure class="painel__grafico">
+            <figcaption class="painel__titulo"></figcaption>
+            <div class="painel__legenda"></div>
+            <div class="painel__svg"></div><p class="painel__arraste" aria-hidden="true">Arraste o gráfico para ver o ano todo</p>
+            <div class="painel__tip" role="status" hidden></div>
+          </figure>
+          <aside class="painel__lado" aria-live="polite"></aside>
+        </div>
+        <div class="painel__rodape">
+          <button type="button" class="link-rotulo painel__tabela-btn" aria-expanded="false">Ver os dados em tabela</button>
+          <p>Fonte: Planejamento de Marketing N2, seção 6 (Monitoramento e controle). Valores simulados para o projeto.</p>
+        </div>
+        <div class="painel__tabela" hidden></div>
+      </div>
+    </section>
+
+    <!-- 11 · CTA -->
+    <section class="aviso" id="aviso" data-bottle="0.48,-0.04,0.9,7,1" data-bottle-m="0.6,1.9,0.4,7,0">
+      <canvas class="aviso__creme" aria-hidden="true"></canvas>
+      <div class="aviso__col">
+        <h2 class="display-lg">Seja o primeiro a provar.</h2>
+        <p class="aviso__lede">O lançamento começa pelos supermercados de Uberaba, Uberlândia e Araxá. Deixe seu e-mail e avisamos quando a TerraNova chegar perto de você.</p>
+        <form class="aviso__form" novalidate>
+          <label class="sr-only" for="email">Seu e-mail</label>
+          <input class="input" id="email" name="email" type="email" placeholder="seu@email.com" autocomplete="email" required />
+          <label class="sr-only" for="cidade">Sua cidade</label>
+          <select class="input input--select" id="cidade" name="cidade">
+            <option value="">Sua cidade</option>
+            <option>Uberaba</option>
+            <option>Uberlândia</option>
+            <option>Araxá</option>
+            <option>Outra cidade</option>
+          </select>
+          <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button class="pill pill--fill" type="submit">Avisar no lançamento</button>
+        </form>
+        <p class="aviso__nota">Usamos seu e-mail só para avisar do lançamento. Nada de spam.</p>
+        <p class="aviso__msg" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" data-bottle="0.48,1.9,0.6,8,0">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a class="nav__brand" href="#topo" aria-label="TerraNova, voltar ao início">
+            <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo" /></svg>
+            <span>TerraNova</span>
+          </a>
+          <p>Iogurte artesanal feito em pequenos lotes no Triângulo Mineiro, com poucos ingredientes e nada escondido no rótulo.</p>
+          <p class="price"><span>Garrafa de 280 ml</span><strong>R$ 12,99</strong></p>
+        </div>
+
+        <nav class="footer__col" aria-label="As versões">
+          <h3>A linha</h3>
+          <ul class="footer__versoes"></ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="Navegação do rodapé">
+          <h3>Navegue</h3>
+          <ul>
+            <li><a href="#manifesto">Manifesto</a></li>
+            <li><a href="#ingredientes">Ingredientes</a></li>
+            <li><a href="#processo">Processo</a></li>
+            <li><a href="#aviso">Aviso de lançamento</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer__col">
+          <h3>Onde encontrar</h3>
+          <ul>
+            <li><a href="#onde">Uberaba</a></li>
+            <li><a href="#onde">Uberlândia</a></li>
+            <li><a href="#onde">Araxá</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h3>Fale com a gente</h3>
+          <ul>
+            <li><a href="#">@terranova.iogurte</a></li>
+            <li>contato@terranova.com.br</li>
+            <li>Uberaba, MG, <span class="footer__hora" aria-label="horário local">--:--</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__team">
+        <p class="footer__team-label">Planejamento de Marketing N2 feito pela agência NewBrand para a Universidade de Uberaba, 2026.</p>
+        <ul class="footer__names">
+          <li>Daniel Tiburcio<br />de Oliveira</li>
+          <li class="dev">
+            <button type="button" class="dev__nome" aria-expanded="false" aria-controls="dev-card">Kaike Garcia<br />Oliveira</button>
+            <span class="dev__papel">Desenvolvimento do site</span>
+            <div class="dev__card" id="dev-card" role="dialog" aria-label="Kaike Garcia Oliveira" hidden></div>
+          </li>
+          <li>Rayson Aparecido<br />Mariano Nunes</li>
+          <li>Vítor Almeida<br />Prado</li>
+          <li>Wesley Jacomine<br />de Oliveira Bispo</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer__word" aria-hidden="true"><span class="footer__word-line">TerraNova</span><span class="footer__word-fill">TerraNova</span></p>
+
+    <div class="footer__base">
+      <p>© 2026 TerraNova. Projeto acadêmico, marca criada para a disciplina.</p>
+      <p class="footer__tag">O bem da terra no seu dia.</p>
+      <a class="footer__up" href="#topo">
+        <span>Voltar ao topo</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </a>
+    </div>
+  </footer>
+
+  <dialog class="nutri-dialog" aria-labelledby="nutri-titulo">
+    <div class="nutri-dialog__inner"></div>
+    <button class="pill nutri-dialog__close" type="button">Fechar</button>
+  </dialog>
+
+  <p class="kbd-hint" aria-hidden="true">Modo apresentação: ← → trocam de seção</p>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="logo" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" stroke-width="2" />
+      <path d="M8 40 C 20 33, 44 33, 56 40 L 56 44 C 44 38, 20 38, 8 44 Z M11 48 C 24 42, 40 42, 53 48 L 51 52 C 40 47, 24 47, 13 52 Z" fill="currentColor" opacity=".75" />
+      <path d="M32 36 V 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+      <path d="M32 18 C 26 14, 27 8, 32 5 C 37 8, 38 14, 32 18 Z" fill="currentColor" />
+      <path d="M31 27 C 24 28, 18 24, 16 17 C 24 16, 30 20, 31 27 Z" fill="currentColor" />
+      <path d="M33 27 C 40 28, 46 24, 48 17 C 40 16, 34 20, 33 27 Z" fill="currentColor" />
+    </symbol>
+  </svg>
+
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/lenis.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
