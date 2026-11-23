@@ -2,6 +2,35 @@
 
 Landing page de apresentação do Iogurte TerraNova (Planejamento de Marketing N2, agência NewBrand, Universidade de Uberaba, 2026).
 
+**[Ver o site no ar](https://kaike000708.github.io/TerraNova-3D-Landing-Page/)**
+
+![Abertura do site com a garrafa 3D](screenshots/01_abertura.jpg)
+
+## Prints
+
+| | |
+|---|---|
+| ![As cinco versões](screenshots/02_linha.jpg) | ![Rótulo e tabela nutricional](screenshots/03_rotulo.jpg) |
+| **A linha:** cada versão troca a cor da página e a garrafa 3D | **Rótulo:** a garrafa gira até o verso e mostra a tabela nutricional |
+| ![Mapa de distribuição](screenshots/04_mapa.jpg) | ![Gôndola com as cinco versões](screenshots/05_gondola.jpg) |
+| **Onde comprar:** mapa com as cidades-polo e os parceiros | **Gôndola:** as cinco garrafas na prateleira, com hover |
+| ![Matriz FOFA](screenshots/07_estrategia.png) | ![Campanha](screenshots/08_campanha.jpg) |
+| **Estratégia:** matriz FOFA e mix de marketing (4 Ps) | **Campanha:** peças Push e Pull em rolagem horizontal |
+| ![Painel planejado × realizado](screenshots/09_painel.jpg) | ![Chamada final](screenshots/10_aviso.jpg) |
+| **Resultados:** painel planejado × realizado de 2027 | **Cadastro:** formulário com fundo animado em shader |
+
+<p align="center"><img src="screenshots/06_celular.jpg" alt="Site no celular" width="300" /></p>
+
+## Tecnologias
+
+HTML, CSS e JavaScript puros (sem build), [Three.js](https://threejs.org) para o 3D, [GSAP](https://gsap.com) para as animações, [Lenis](https://lenis.darkroom.engineering) para a rolagem suave, WebGL para o fundo em shader, gráficos em SVG feitos à mão e [FormSubmit](https://formsubmit.co) para o formulário.
+
+## Equipe
+
+Projeto do grupo para a disciplina de Marketing (agência NewBrand, Universidade de Uberaba). Desenvolvimento do site: Kaike Garcia Oliveira.
+
+## Como foi feito
+
 A garrafa 3D é feita em código com Three.js. O formato foi medido nas fotos dos produtos, e os rótulos são as próprias artes das fotos, "desenroladas" do cilindro e salvas em `assets/labels/` (só a tinta, com transparência). Por cima entram o vidro com reflexos de estúdio, o iogurte por dentro, a espuma no gargalo e a tampa de cada versão. As bibliotecas e as fontes estão dentro da pasta, então o site funciona **sem internet** (bom para apresentar na sala).
 
 ## Como abrir no VSCode
@@ -45,6 +74,7 @@ Use **←** e **→** (ou Page Up / Page Down, como num passador de slides) para
 ```
 terranova-site/
 ├── index.html          ← textos e seções da página
+├── screenshots/        ← prints usados neste README
 ├── css/style.css       ← cores, fontes, layout (variáveis no topo, em :root)
 ├── js/
 │   ├── variants.js     ← as 5 versões: nome, textos, cores, foto, tipo de garrafa
@@ -65,7 +95,7 @@ terranova-site/
 
 - **Por que a TerraNova tem espaço**: matriz FOFA (forças, fraquezas, oportunidades, ameaças) em que cada quadrante mostra, ao passar o mouse ou tocar, como o plano responde; abaixo, o mix de marketing (4 Ps). No celular as respostas ficam sempre visíveis.
 
-- **Campanha**: seção com rolagem horizontal (a rolagem vertical anda as peças para o lado). No celular vira uma lista vertical. As fotos ficam em `assets/img/campanha-*.jpg`; a de influenciadores ainda é um espaço reservado (`campanha-influenciadores.jpg`, prompt em `PROMPTS-IMAGENS.md`).
+- **Campanha**: seção com rolagem horizontal (a rolagem vertical anda as peças para o lado). No celular vira uma lista vertical. As fotos ficam em `assets/img/campanha-*.jpg`; incluindo a de influenciadores (`campanha-influenciadores.jpg`, gerada com o prompt em `PROMPTS-IMAGENS.md`).
 - **Planejado × realizado**: painel com seis abas (Vendas, Pontos de venda, Redes sociais, Avaliações, Reconhecimento, Plano de ação), números-resumo calculados dos dados, meta marcada em dourado, Stand by em tracejado, ação corretiva de cada mês ao passar o mouse e opção de ver tudo em tabela. Os valores são simulados e ficam em `js/dados2027.js`.
 
 ## O que dá para mudar facilmente

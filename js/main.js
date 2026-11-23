@@ -430,6 +430,8 @@ form.addEventListener('submit', async (e) => {
 
   botaoEnviar.disabled = true; botaoEnviar.textContent = 'Enviando...';
   msg.textContent = '';
+  const corte = new AbortController();
+  const relogioEnvio = setTimeout(() => corte.abort(), 20000); // nunca deixa o botão girando para sempre
   try {
     const r = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(CONTATO.email)}`, {
       method: 'POST',
@@ -439,14 +441,21 @@ form.addEventListener('submit', async (e) => {
         _subject: CONTATO.assunto, _template: 'table', _captcha: 'false',
         data: new Date().toLocaleString('pt-BR'), pagina: location.href,
       }),
+      signal: corte.signal,
     });
     const j = await r.json().catch(() => ({}));
     if (r.ok && String(j.success) !== 'false') sucesso();
     else throw new Error(j.message || r.status);
   } catch (err) {
     console.warn('Falha no envio:', err);
-    msg.textContent = 'Não foi possível enviar agora. Verifique sua conexão e tente de novo.';
+    const texto = String(err && err.message || '');
+    msg.textContent = /activat/i.test(texto)
+      ? 'Formulário aguardando ativação: confirme o e-mail do FormSubmit na caixa de entrada do responsável e tente de novo.'
+      : err && err.name === 'AbortError'
+        ? 'O envio demorou demais. Tente de novo em alguns segundos.'
+        : 'Não foi possível enviar agora. Verifique sua conexão e tente de novo.';
   } finally {
+    clearTimeout(relogioEnvio);
     botaoEnviar.disabled = false; botaoEnviar.textContent = 'Avisar no lançamento';
   }
 });
