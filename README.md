@@ -21,6 +21,40 @@ Landing page de apresentação do Iogurte TerraNova (Planejamento de Marketing N
 
 <p align="center"><img src="screenshots/06_celular.jpg" alt="Site no celular" width="300" /></p>
 
+## O que tem no site
+
+A página conta a história do produto na ordem do planejamento de marketing:
+
+1. **Abertura:** a garrafa 3D da versão Base, o nome da marca e o preço (R$ 12,99).
+2. **Manifesto:** as palavras acendem conforme a rolagem.
+3. **Ingredientes:** o que entra (e o que não entra) no iogurte.
+4. **A linha:** as cinco versões (Base, Proteica, Light, Kids e Senior). Cada uma troca a cor da página, a tampa e o rótulo da garrafa 3D, com foto, benefícios e o botão "Ver rótulo e tabela nutricional".
+5. **Por que vidro:** vantagens da embalagem, números de reciclagem e como descartar.
+6. **Do pasto à garrafa:** o processo em três etapas, com fotos.
+7. **Onde comprar:** mapa interativo de Uberaba, Uberlândia e Araxá (população, distância, parceiros LS Guarato e Empório Bahamas) e o canal curto Fabricante → Varejista → Consumidor.
+8. **Por que a TerraNova tem espaço:** matriz FOFA interativa e o mix de marketing (4 Ps).
+9. **A campanha:** outdoors, influenciadores, Instagram/TikTok, degustação e gôndola, cada peça marcada como Push ou Pull.
+10. **Cinco versões, uma prateleira:** as cinco garrafas 3D lado a lado e as metas dos seis primeiros meses (10 pontos de venda, 120.000 unidades, 30% de reconhecimento).
+11. **Planejado × realizado:** painel do cenário simulado de 2027.
+12. **Seja o primeiro a provar:** cadastro de e-mail e cidade, com fundo animado.
+13. **Rodapé:** navegação, cidades, equipe e crédito de desenvolvimento.
+
+## Funcionalidades
+
+- **Garrafa 3D realista** que gira e muda de lugar conforme a rolagem, com a tampa, o rótulo e o verso de cada versão.
+- **Tela de carregamento** em que a silhueta da garrafa enche de iogurte com o progresso real.
+- **Rótulo no padrão brasileiro:** ingredientes, alérgicos e tabela nutricional no modelo da Anvisa, com porção de 200 g e %VD.
+- **Gôndola com movimento:** as garrafas "respiram", a do mouse vem para a frente, e a prateleira entra e sai presa à rolagem.
+- **Matriz FOFA com hover:** uma luz segue o cursor e revela como o plano responde a cada ponto.
+- **Campanha em rolagem horizontal** no computador e em lista no celular.
+- **Painel de dados** com seis abas, tooltips, ação corretiva de cada mês e visualização em tabela.
+- **Fundo em shader (WebGL)** na chamada final, que reage ao mouse e só roda quando está na tela.
+- **Cadastro real por e-mail** (FormSubmit), com proteção contra robôs, limite de 20 s e mensagens de erro claras.
+- **Modo apresentação:** setas do teclado ou passador de slides pulam de seção em seção.
+- **Responsivo:** testado em 1920, 1440, 1366, 390 e 360 px de largura, sem nada passando da tela e com área de toque confortável no celular.
+- **Acessibilidade:** navegação por teclado, foco visível, textos alternativos, tabela para quem não enxerga os gráficos e respeito à opção de reduzir movimento do sistema.
+- **Desempenho:** 3D redesenhado só quando algo muda, resolução que se ajusta à máquina e tudo funcionando sem internet (exceto o formulário).
+
 ## Tecnologias
 
 HTML, CSS e JavaScript puros (sem build), [Three.js](https://threejs.org) para o 3D, [GSAP](https://gsap.com) para as animações, [Lenis](https://lenis.darkroom.engineering) para a rolagem suave, WebGL para o fundo em shader, gráficos em SVG feitos à mão e [FormSubmit](https://formsubmit.co) para o formulário.
@@ -53,13 +87,13 @@ A garrafa só é redesenhada quando algo muda (rolagem, troca de versão, mouse)
 
 ## Receber os e-mails do cadastro
 
-O formulário "Seja o primeiro a provar" envia e-mail e cidade pelo FormSubmit (gratuito, sem servidor). Os cadastros vão para o e-mail definido em `js/config.js` (hoje: kaike.garcia10@gmail.com). Faça um cadastro de teste: na primeira vez o FormSubmit pode pedir para confirmar o endereço por e-mail. Enquanto o e-mail de exemplo estiver lá, o formulário funciona só em modo de demonstração.
+O formulário "Seja o primeiro a provar" envia e-mail e cidade pelo FormSubmit (gratuito, sem servidor). Os cadastros vão para o e-mail definido em `js/config.js` (hoje: kaike.garcia10@gmail.com). Faça um cadastro de teste: na primeira vez o FormSubmit pode pedir para confirmar o endereço por e-mail.
 
-O envio precisa de internet e funciona com o site aberto pelo Live Server ou publicado (Netlify, Vercel, GitHub Pages).
+O envio precisa de internet e funciona melhor com o site publicado (GitHub Pages). Bloqueadores de anúncio podem barrar o envio. Se o FormSubmit não responder em 20 segundos, o site avisa em vez de ficar carregando.
 
 ## Rótulo e tabela nutricional
 
-Na seção "A linha", o botão "Rótulo e tabela" gira a garrafa 3D até o verso e mostra ingredientes, alérgicos e a tabela no modelo da Anvisa (RDC 429/2020 e IN 75/2020). Os valores ficam em `js/variants.js` (campo `nutri`, por 100 g) e são **estimados para o projeto**: confiram com um nutricionista se forem usar em embalagem real.
+Na seção "A linha", o botão "Ver rótulo e tabela nutricional" gira a garrafa 3D até o verso e mostra ingredientes, alérgicos e a tabela no modelo da Anvisa (RDC 429/2020 e IN 75/2020). Os valores ficam em `js/variants.js` (campo `nutri`, por 100 g) e são **estimados para o projeto**: confiram com um nutricionista se forem usar em embalagem real.
 
 ## Crédito de desenvolvimento
 
@@ -116,11 +150,15 @@ terranova-site/
 
 **Formato da garrafa:** `PERFIL` em `js/perfil.js`. Cada par é `[raio, altura]` em pixels da foto, de baixo para cima; a garrafa é "torneada" a partir dele. Há um perfil `vidro` (280 ml) e um `pet` (Kids, 200 ml).
 
-**Cores gerais:** variáveis no topo de `css/style.css` (`--campo`, `--soro`, `--mel`...).
+**Cores gerais:** variáveis no topo de `css/style.css` (`--campo`, `--soro`, `--ouro`...).
 
 ## Inspiração
 
 Estrutura inspirada em eathungrytiger.com: tipografia em escala de cartaz, um canvas de cor única com um acento só, botões em pílula, divisores pontilhados e marca d'água botânica. A paleta trocou o ferrugem/dourado da Hungry Tiger pelo verde de pasto e o creme do iogurte, com a cor de cada versão da linha tomando a página quando ela aparece.
+
+## Fontes dos dados
+
+Textos, metas, matriz FOFA, 4 Ps, campanha e plano de ação vêm do Planejamento de Marketing N2 da NewBrand. Os números do painel de 2027 são **simulados** para a apresentação. A população das cidades é do Censo 2022 (IBGE).
 
 ## Observação
 
