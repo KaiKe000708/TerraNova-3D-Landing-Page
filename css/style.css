@@ -722,6 +722,20 @@ main, .footer { position: relative; z-index: 1; }
 .mix__nome { font: 500 .74rem/1 var(--sans); color: var(--ouro); }
 .mix__chave { font: 300 clamp(1.9rem, 3vw, 2.8rem)/1 var(--serif); letter-spacing: -0.03em; color: var(--soro); transition: transform .6s var(--ease); }
 .mix__p:hover .mix__chave { transform: translateX(.3rem); }
+/* ---------- Selo viajante (js/interacoes.js) ---------- */
+/* selo TerraNova: sai do menu e pousa no título de cada seção */
+.selo-slot { display: inline-block; width: .5em; height: .5em; margin-left: .22em; vertical-align: .62em; color: var(--ouro); }
+.selo-slot svg { display: block; width: 100%; height: 100%; }
+.tem-selo .selo-slot svg { opacity: 0; }
+.tem-selo .nav .nav__brand .logo-mark { visibility: hidden; }
+.selo { position: fixed; left: 0; top: 0; z-index: 21; width: 30px; height: 30px; pointer-events: none; color: var(--soro); opacity: 0; transition: color .6s var(--ease), opacity .8s var(--ease) 1.5s; will-change: transform; }
+.is-loaded .selo { opacity: 1; }
+.selo.is-pousado { color: var(--ouro); }
+@media (max-width: 640px) {
+  .selo-slot { width: .58em; height: .58em; margin-left: .18em; vertical-align: .5em; }
+}
+.selo svg { display: block; width: 100%; height: 100%; }
+
 @media (hover: none) {
   .quad ul { opacity: .55; }
   .quad .quad__resp { position: relative; left: auto; right: auto; bottom: auto; opacity: 1; transform: none; }

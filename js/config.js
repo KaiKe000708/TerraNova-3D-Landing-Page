@@ -25,3 +25,11 @@ export const DESENVOLVEDOR = {
   github: '',   // ex.: 'https://github.com/seu-usuario'
   instagram: '',
 };
+
+// Efeitos (true = ligado). Com "reduzir movimento" ligado no sistema,
+// a física e o voo do selo já são desligados sozinhos.
+export const EFEITOS = {
+  fisica: true,        // garrafa inclina levemente com a rolagem e balança ao parar
+  reflexoMouse: true,  // o reflexo de estúdio desliza pelo vidro seguindo o mouse
+  selo: true,          // selo TerraNova que desce do menu até o título de cada seção
+};

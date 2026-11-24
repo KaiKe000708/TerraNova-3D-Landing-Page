@@ -9,7 +9,8 @@
 //  data-bottle-m é a versão para celular (opcional).
 // =============================================================
 import { VARIANTS, tabelaNutricional, ROTULO } from './variants.js';
-import { CONTATO, DESENVOLVEDOR } from './config.js';
+import { CONTATO, DESENVOLVEDOR, EFEITOS } from './config.js';
+import { montarSelo } from './interacoes.js';
 import { montarPainel } from './painel.js';
 import { montarCreme } from './creme.js';
 import { PERFIL, ALTURA_PX } from './perfil.js';
@@ -324,9 +325,16 @@ function trocarVersao(i) {
   }
 }
 
+let yAntes = window.scrollY, tAntes = performance.now(), velSuave = 0;
 function aoRolar() {
   const y = window.scrollY;
   const vh = window.innerHeight;
+  // velocidade da rolagem em telas por segundo: vira força na garrafa (física em bottle3d.js)
+  const agora = performance.now(), dtR = Math.max((agora - tAntes) / 1000, 1 / 240);
+  const vel = (y - yAntes) / vh / dtR;
+  velSuave += (Math.max(-12, Math.min(12, vel)) - velSuave) * 0.35;
+  yAntes = y; tAntes = agora;
+  cena?.setVelocidade?.(velSuave);
   root.classList.toggle('is-scrolled', y > 30);
   const q = quadroAtual(y);
   if (cena && q) Object.assign(cena.alvo, q);
@@ -531,6 +539,9 @@ form.addEventListener('submit', async (e) => {
 
 montarPainel(document.querySelector('[data-painel]'), { reduzido });
 
+// ---------- Selo viajante (js/interacoes.js) ----------
+if (EFEITOS.selo) montarSelo({ reduzido });
+
 // ---------- Matriz FOFA: luz que segue o cursor e toque para abrir ----------
 document.querySelectorAll('.quad, .mix__p').forEach((el) => {
   el.addEventListener('pointermove', (e) => {
@@ -681,7 +692,7 @@ async function iniciar() {
     try {
       const { criarCena } = await import('./bottle3d.js');
       alvoProg = 0.2;
-      cena = await criarCena(document.getElementById('cena3d'), VARIANTS, { reduzido, aoProgresso: (v) => { alvoProg = 0.2 + v * 0.8; } });
+      cena = await criarCena(document.getElementById('cena3d'), VARIANTS, { reduzido, efeitos: EFEITOS, aoProgresso: (v) => { alvoProg = 0.2 + v * 0.8; } });
     } catch (err) { console.warn('3D indisponível:', err); root.classList.add('no-webgl'); }
   } else root.classList.add('no-webgl');
   alvoProg = 1;

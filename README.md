@@ -99,6 +99,10 @@ São treze blocos em sequência, e a garrafa 3D muda de lugar, tamanho e giro em
 | Painel planejado × realizado | Seis abas (vendas, pontos de venda, redes sociais, avaliações, reconhecimento e plano de ação), meta em dourado, Stand by tracejado, ação corretiva de cada mês e visão em tabela |
 | Fundo em shader | "Creme escorrendo" em WebGL nas cores da marca, que reage ao mouse |
 | Cadastro de lançamento | E-mail e cidade, campo anti-robô, envio pelo [FormSubmit](https://formsubmit.co) sem servidor próprio, com limite de 20 s e mensagem de erro clara |
+| Garrafa com física | A rolagem inclina a garrafa levemente e ela balança com amortecimento ao parar; ao trocar de versão pousa com um tremido sutil de vidro |
+| Reflexo que segue o mouse | O estúdio de luz gira com o cursor e o reflexo desliza pelo vidro, enquanto o rótulo fica parado |
+| Selo viajante | O logo sai do menu e pousa ao lado do título de cada seção, a partir de "Do pasto à garrafa", e volta ao menu ao subir |
+| Ícone na aba | Favicon com o logo TerraNova |
 
 **Acessibilidade:** link para pular ao conteúdo, foco visível, navegação pelo teclado no seletor, no mapa, na matriz e no painel, textos alternativos, tabela com os dados dos gráficos e `prefers-reduced-motion` (sem animações para quem pede).
 
@@ -130,6 +134,7 @@ Para mudar textos, cores, rótulos, a posição da garrafa em cada seção, os n
 ├── css/style.css           # cores e fontes em :root, layout e responsivo
 ├── js/
 │   ├── main.js             # rolagem, quadros-chave da garrafa, mapa, campanha, formulário, rodapé
+│   ├── interacoes.js       # selo viajante entre as seções
 │   ├── bottle3d.js         # cena Three.js: garrafa, rótulos, luz, gôndola
 │   ├── perfil.js           # silhueta das garrafas medida nas fotos
 │   ├── variants.js         # as 5 versões, rótulo e cálculo da tabela nutricional

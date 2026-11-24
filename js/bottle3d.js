@@ -265,8 +265,16 @@ function texturaRadial(stops, w = 256, h = 64) {
 }
 const quadro = () => new Promise((r) => requestAnimationFrame(() => r()));
 
+// mola amortecida (integração semi-implícita, estável com dt variável)
+function mola(o, chave, alvo, k, c, dt) {
+  const v = 'v' + chave;
+  o[v] += (k * (alvo - o[chave]) - c * o[v]) * dt;
+  o[chave] += o[v] * dt;
+}
+
 // ---------- cena ----------
-export async function criarCena(canvas, variants, { reduzido = false, aoProgresso = () => {} } = {}) {
+export async function criarCena(canvas, variants, { reduzido = false, aoProgresso = () => {}, efeitos = {} } = {}) {
+  const FX = { fisica: true, reflexoMouse: true, ...efeitos };
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance', premultipliedAlpha: true });
   let dpr = Math.min(window.devicePixelRatio || 1, 1.75);
   renderer.setPixelRatio(dpr);
@@ -435,6 +443,7 @@ export async function criarCena(canvas, variants, { reduzido = false, aoProgress
       onComplete: () => { if (!trocado) aplicarVersao(pendente); trocado = true; extra.spin = 0; sujo = true; },
     });
     gs.timeline().to(extra, { s: 0.96, duration: 0.5, ease: 'power2.in' }).to(extra, { s: 1, duration: 0.85, ease: 'power3.out' });
+    setTimeout(() => cutucar(0.25), 1150); // pousa de frente com um leve "tremido" de vidro
   }
 
   function entrada() {
@@ -466,6 +475,34 @@ export async function criarCena(canvas, variants, { reduzido = false, aoProgress
   }
   const suave = (t) => { t = Math.min(Math.max(t, 0), 1); return t * t * (3 - 2 * t); };
 
+  // ---------- física: a garrafa tem massa ----------
+  // inc: inclinação para trás/frente pela velocidade da rolagem (mola sub-amortecida → balança ao parar)
+  // lat: balanço lateral; def: micro-deformação elástica do vidro (estica/achata)
+  const fis = { inc: 0, vinc: 0, lat: 0, vlat: 0, def: 0, vdef: 0 };
+  const fisicaLigada = FX.fisica && !reduzido;
+  let velRolagem = 0;          // telas por segundo (vem do main.js)
+  function setVelocidade(v) { velRolagem = fisicaLigada ? v : 0; sujo = true; }
+  function cutucar(forca = 1) { if (!fisicaLigada) return; fis.vdef -= 0.9 * forca; fis.vlat += (Math.random() - 0.5) * 0.8 * forca; sujo = true; }
+  function passoFisica(dt) {
+    // várias sub-etapas pequenas: molas estáveis mesmo se um quadro demorar
+    const n = Math.max(1, Math.ceil(dt / (1 / 120))), h = dt / n;
+    // resposta leve que satura: rolagem normal ≈ 2°, rolagem rápida no máximo ≈ 5°
+    const alvoInc = fisicaLigada ? -0.09 * Math.tanh(velRolagem * 0.35) : 0;
+    const alvoDef = fisicaLigada ? 0.008 * Math.tanh(Math.abs(velRolagem) * 0.3) : 0;
+    for (let i = 0; i < n; i++) {
+      mola(fis, 'inc', alvoInc, 70, 7.5, h);   // ζ ≈ 0,45: passa um pouco e volta
+      mola(fis, 'lat', 0, 55, 5.5, h);
+      mola(fis, 'def', alvoDef, 260, 9, h);    // vidro "duro": rápido e curto
+    }
+    velRolagem *= Math.pow(0.02, dt); // se o main.js parar de mandar, a força some sozinha
+    const ativo = Math.abs(fis.inc) + Math.abs(fis.vinc) + Math.abs(fis.lat) + Math.abs(fis.vlat) + Math.abs(fis.def - alvoDef) + Math.abs(fis.vdef);
+    if (ativo < 1e-4) {        // assentou: zera para não desenhar à toa
+      fis.inc = fis.vinc = fis.lat = fis.vlat = fis.vdef = 0; fis.def = alvoDef;
+      return false;
+    }
+    return true;
+  }
+
   // qualidade adaptativa: se a máquina sofrer, reduz a resolução do 3D
   let somaDt = 0, nDt = 0, ajustado = false;
   const relogio = new THREE.Timer();
@@ -485,18 +522,23 @@ export async function criarCena(canvas, variants, { reduzido = false, aoProgress
       somaDt += dt; nDt++;
       if (nDt === 90) {
         ajustado = true;
-        if (somaDt / nDt > 1 / 40 && dpr > 1) { dpr = 1; renderer.setPixelRatio(1); resize(); }
+        if (somaDt / nDt > 1 / 40) {
+          if (dpr > 1) { dpr = 1; renderer.setPixelRatio(1); resize(); }
+        }
       }
     }
 
+    const emMovimento = passoFisica(dt);
     const esc = Math.max(atual.s * extra.s, 0.0001) * escalaBase;
-    const rotY = atual.voltas * TAU + extra.spin + extra.verso + atual.mx * 0.3;
-    const estado = [atual.x, atual.y + extra.rise, esc, rotY, atual.my, atual.sombra, atual.g, alvo.gy];
+    // o mouse gira quase só o estúdio de luz: o reflexo desliza pelo vidro e a garrafa fica no lugar
+    const mouseGira = FX.reflexoMouse ? 0.06 : 0.3;
+    const rotY = atual.voltas * TAU + extra.spin + extra.verso + atual.mx * mouseGira;
+    const estado = [atual.x, atual.y + extra.rise, esc, rotY, atual.my, atual.sombra, atual.g, alvo.gy, atual.mx];
 
     // só desenha quando algo muda (e nunca fora da tela): a GPU descansa com a página parada
     const naGondola = atual.g > 0.01 && alvo.gy < 1.1; // depois que a prateleira sai da tela, para de desenhar
     const visivel = (Math.abs(atual.y) - 0.8 * atual.s < 1.05 && atual.s > 0.02) || naGondola;
-    let mudou = sujo || naGondola; // na gôndola as garrafas "respiram": desenha sempre
+    let mudou = sujo || naGondola || emMovimento; // na gôndola as garrafas "respiram": desenha sempre
     for (let i = 0; i < estado.length && !mudou; i++) if (Math.abs(estado[i] - ultimo[i]) > 1e-5) mudou = true;
     if (!mudou || (!visivel && !visivelAntes && !sujo)) return;
     ultimo = estado; visivelAntes = visivel; sujo = false;
@@ -505,8 +547,18 @@ export async function criarCena(canvas, variants, { reduzido = false, aoProgress
     raiz.position.set(atual.x * meiaLargura, (atual.y + extra.rise) * meiaAltura, 0);
     raiz.scale.setScalar(esc);
     giro.rotation.y = rotY;
-    giro.rotation.x = atual.my * 0.05;
-    giro.rotation.z = -atual.mx * 0.025;
+    giro.rotation.x = atual.my * (FX.reflexoMouse ? 0.025 : 0.05) + fis.inc;
+    giro.rotation.z = -atual.mx * (FX.reflexoMouse ? 0.012 : 0.025) + fis.lat * 0.12;
+    // deformação elástica a partir da base (a garrafa não "descola" da sombra)
+    const d = fis.def;
+    giro.scale.set(1 - d * 0.5, 1 + d, 1 - d * 0.5);
+    giro.position.y = (ALTURA / 2) * PERFIL[tipoAtual].escala * d;
+    if (FX.reflexoMouse) {
+      // softbox virtual: o estúdio gira com o mouse e a luz principal acompanha
+      scene.environmentRotation.set(-atual.my * 0.07, atual.mx * 0.36, 0);
+      chave.position.set(-4 + atual.mx * 1.9, 5 - atual.my * 0.9, 5);
+      halo.position.x = atual.mx * 0.12; halo.position.y = -atual.my * 0.08;
+    }
 
     sombra.position.set(0, -ALTURA / 2 - 0.02, -0.6);
     const ls = 2.7 * PERFIL[tipoAtual].escala;
@@ -542,7 +594,10 @@ export async function criarCena(canvas, variants, { reduzido = false, aoProgress
 
     renderer.render(scene, camera);
   }
-  const api = { alvo, setVersao, setVerso, setFoco, entrada, renderer, meshes, medidasGondola };
+  const api = {
+    alvo, setVersao, setVerso, setFoco, entrada, renderer, meshes, medidasGondola,
+    setVelocidade, cutucar,
+  };
   frame();
   return api;
 }

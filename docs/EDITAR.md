@@ -45,6 +45,10 @@ Cada mês tem `proj` (projetado), `real` (realizado) e `acao` (ação corretiva)
 
 Os espaços da seção "Do pasto à garrafa" procuram `processo-1.jpg` a `processo-3.jpg`, e a campanha procura `campanha-*.jpg`, em `assets/img/`. Enquanto um arquivo não existir, aparece o espaço vazio com a legenda. Os prompts estão em [`PROMPTS-IMAGENS.md`](../PROMPTS-IMAGENS.md).
 
+## Efeitos (`js/config.js` → `EFEITOS`)
+
+`fisica`, `reflexoMouse` e `selo` ligam (`true`) ou desligam (`false`) cada efeito. Para tirar o selo de uma seção, apague o `<span class="selo-slot">` do fim do título no `index.html`.
+
 ## Cadastro
 
 Na primeira vez, o FormSubmit manda um e-mail pedindo para ativar o formulário. O envio funciona com o site publicado; bloqueadores de anúncio podem barrar.
